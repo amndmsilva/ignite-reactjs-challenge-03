@@ -36,7 +36,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     try {
       const updatedCart = [...cart];
       const productExists = updatedCart.find(
-        (product) => product.id === productId
+        product => product.id === productId
       );
 
       const stock = await api.get(`stock/${productId}`);
@@ -55,7 +55,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
       if (productExists) {
         productExists.amount = amount;
       } else {
-        const product = await api.get(`products/${productId}`);
+        const product = await api.get(`/products/${productId}`);
 
         const newProduct = {
           ...product.data,
@@ -75,7 +75,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     try {
       const updatedCart = [...cart];
       const productIndex = updatedCart.findIndex(
-        (product) => product.id === productId
+        product => product.id === productId
       );
 
       if (productIndex >= 0) {
@@ -83,6 +83,8 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
         setCart(updatedCart);
         localStorage.setItem("@RocketShoes:cart", JSON.stringify(updatedCart));
         return;
+      } else {
+        throw Error()
       }
 
     } catch {
@@ -117,7 +119,10 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
         productExists.amount = amount;
         setCart(updatedCart);
         localStorage.setItem("@RocketShoes:cart", JSON.stringify(updatedCart));
-      } 
+      } else {
+        throw Error()
+      }
+      
     } catch {
       toast.error("Erro na alteração de quantidade do produto");
     }
